@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadoras Financieras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .result-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .result-item p {
+            margin: 0;
+        }
+        .result-item .value {
+            font-weight: bold;
+        }
+        .result-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 class="card-title">Calculadora de Retenciones</h2>
+        <div class="input-group">
+            <label for="valorProductoARS">Valor del Producto (ARS)</label>
+            <input type="number" id="valorProductoARS" placeholder="Ingrese el valor del producto">
+        </div>
+        <div class="results">
+            <div class="result-item">
+                <p>Débito (0.80%)</p>
+                <div class="result-details">
+                    <p>Retención: <span class="value" id="retencionDebito">0.00 ARS</span></p>
+                    <p>A cobrar: <span class="value" id="cobrarDebito">0.00 ARS</span></p>
+                </div>
+            </div>
+            <div class="result-item">
+                <p>3 Cuotas (15.10%)</p>
+                <div class="result-details">
+                    <p>Retención: <span class="value" id="retencion3Cuotas">0.00 ARS</span></p>
+                    <p>A cobrar: <span class="value" id="cobrar3Cuotas">0.00 ARS</span></p>
+                </div>
+            </div>
+            <div class="result-item">
+                <p>6 Cuotas (23.77%)</p>
+                <div class="result-details">
+                    <p>Retención: <span class="value" id="retencion6Cuotas">0.00 ARS</span></p>
+                    <p>A cobrar: <span class="value" id="cobrar6Cuotas">0.00 ARS</span></p>
+                </div>
+            </div>
+            <div class="result-item">
+                <p>12 Cuotas (38.81%)</p>
+                <div class="result-details">
+                    <p>Retención: <span class="value" id="retencion12Cuotas">0.00 ARS</span></p>
+                    <p>A cobrar: <span class="value" id="cobrar12Cuotas">0.00 ARS</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">Calculadora de Conversión USD a ARS</h2>
+        <div class="input-group">
+            <label for="valorUSD">Valor del Producto (USD)</label>
+            <input type="number" id="valorUSD" placeholder="Ingrese el valor en USD">
+        </div>
+        <div class="input-group">
+            <label for="valorDolarBlue">Valor del Dólar Blue</label>
+            <input type="number" id="valorDolarBlue" placeholder="Ingrese el valor del Dólar Blue">
+        </div>
+        <div class="input-group">
+            <label for="peso">Peso del producto (kg)</label>
+            <input type="number" id="peso" placeholder="Ingrese el peso en kg">
+        </div>
+        <div class="results">
+            <div class="result-item">
+                <p>Costo de Envío</p>
+                <p class="value" id="costoEnvio">0.00 USD</p>
+            </div>
+            <div class="result-item">
+                <p>Total en USD (con envío)</p>
+                <p class="value" id="totalUSD">0.00 USD</p>
+            </div>
+            <div class="result-item">
+                <p>Total en ARS</p>
+                <p class="value" id="totalARS">0.00 ARS</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calcularRetencion(valor, porcentaje) {
+            const retencion = parseFloat(valor) * porcentaje / 100;
+            const aCobrar = parseFloat(valor) - retencion;
+            return {
+                retencion: retencion.toFixed(2),
+                aCobrar: aCobrar.toFixed(2)
+            };
+        }
+
+        function actualizarRetenciones() {
+            const valorProductoARS = document.getElementById('valorProductoARS').value;
+            const resultados = {
+                debito: calcularRetencion(valorProductoARS, 0.80),
+                tresCuotas: calcularRetencion(valorProductoARS, 15.10),
+                seisCuotas: calcularRetencion(valorProductoARS, 23.77),
+                doceCuotas: calcularRetencion(valorProductoARS, 38.81)
+            };
+
+            document.getElementById('retencionDebito').textContent = resultados.debito.retencion + ' ARS';
+            document.getElementById('cobrarDebito').textContent = resultados.debito.aCobrar + ' ARS';
+            document.getElementById('retencion3Cuotas').textContent = resultados.tresCuotas.retencion + ' ARS';
+            document.getElementById('cobrar3Cuotas').textContent = resultados.tresCuotas.aCobrar + ' ARS';
+            document.getElementById('retencion6Cuotas').textContent = resultados.seisCuotas.retencion + ' ARS';
+            document.getElementById('cobrar6Cuotas').textContent = resultados.seisCuotas.aCobrar + ' ARS';
+            document.getElementById('retencion12Cuotas').textContent = resultados.doceCuotas.retencion + ' ARS';
+            document.getElementById('cobrar12Cuotas').textContent = resultados.doceCuotas.aCobrar + ' ARS';
+        }
+
+        function calcularTotal() {
+            const valorUSD = parseFloat(document.getElementById('valorUSD').value) || 0;
+            const valorDolarBlue = parseFloat(document.getElementById('valorDolarBlue').value) || 0;
+            const peso = parseFloat(document.getElementById('peso').value) || 0;
+            
+            const costoEnvio = peso * 45;
+            const totalUSD = valorUSD + costoEnvio;
+            const totalARS = totalUSD * valorDolarBlue;
+
+            document.getElementById('costoEnvio').textContent = costoEnvio.toFixed(2) + ' USD';
+            document.getElementById('totalUSD').textContent = totalUSD.toFixed(2) + ' USD';
+            document.getElementById('totalARS').textContent = totalARS.toFixed(2) + ' ARS';
+        }
+
+        document.getElementById('valorProductoARS').addEventListener('input', actualizarRetenciones);
+        document.getElementById('valorUSD').addEventListener('input', calcularTotal);
+        document.getElementById('valorDolarBlue').addEventListener('input', calcularTotal);
+        document.getElementById('peso').addEventListener('input', calcularTotal);
+    </script>
+</body>
+</html>
